@@ -1,0 +1,19 @@
+This program is licensed as GPL v3.
+
+This program downloads subtitles for your videos from the http://www.thesubdb.com database.
+You can also upload subtitles to their database.
+
+How to use this program.
+
+Download subtitles:
+$ perl subdb.pl <movie>
+
+Upload subtitles:
+$ perl subdb.pl <subtitles>
+
+Please note that the subtitle file must be in the same folder as the correspondent video file, and it must have the same filename (except for the extension).
+The subtitles can't be bigger than 200Kbytes, and they must be plain text (only subrip and microdvd subtitles).
+
+
+Best regards,
+David Santiago <demanuel@ymail.com>
