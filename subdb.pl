@@ -31,8 +31,8 @@ use 5.014;
 use constant ALLOWED_FILE_EXTENSIONS_REGEXP => "\.[^.]*";
 use constant BLOCK_SIZE=>65536;# 64K
 use constant SUBDB_API_URL=>'http://api.thesubdb.com/?';
-use constant USER_AGENT => 'SubDB/1.0 (DESsubdb/0.1; demanuel@ymail.com)';
-use constant SUBTITLES_LANGUAGE => qw(pt en);
+use constant USER_AGENT => 'SubDB/1.0 (DESsubdb/0.1; http://sourceforge.net/projects/dessubdb)';
+use constant SUBTITLES_LANGUAGE => qw(en pt);
 use constant ALLOWED_VIDEO_FILE_EXTENSIONS => qw(.avi .m4v .mkv .mp4 .ogv .flv);
 use constant ALLOWED_SUB_FILE_EXTENSIONS => qw(.srt .sub);
 

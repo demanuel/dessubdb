@@ -14,6 +14,7 @@ $ perl subdb.pl <subtitles>
 Please note that the subtitle file must be in the same folder as the correspondent video file, and it must have the same filename (except for the extension).
 The subtitles can't be bigger than 200Kbytes, and they must be plain text (only subrip and microdvd subtitles).
 
+Any suggestion please e-mail me.
 
 Best regards,
 David Santiago <demanuel@ymail.com>
