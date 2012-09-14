@@ -26,6 +26,8 @@ use Digest::MD5 qw(md5_hex);
 use LWP::UserAgent;
 use URI::Escape;
 use File::Basename;
+use Getopt::Long;
+use Data::Dumper;
 use 5.014;
 
 use constant ALLOWED_FILE_EXTENSIONS_REGEXP => "\.[^.]*";
@@ -38,6 +40,10 @@ use constant ALLOWED_SUB_FILE_EXTENSIONS => qw(.srt .sub);
 
 my $browser = LWP::UserAgent->new;
 $browser->agent(USER_AGENT);
+
+my @USER_LANGUAGES;
+GetOptions("lang=s"=>\@USER_LANGUAGES);
+
 
 
 for my $file (@ARGV){
@@ -115,8 +121,7 @@ sub searchAndDownloadSubs{
     my $availableLanguages = $response->content;
     my @languagesToDownload = ();
     
-
-    for my $lang (SUBTITLES_LANGUAGE){
+    for my $lang ($#USER_LANGUAGES==0?@USER_LANGUAGES:SUBTITLES_LANGUAGE){
       
       if( $availableLanguages =~ /$lang/ ){
 	push @languagesToDownload, $lang;
