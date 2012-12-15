@@ -11,11 +11,11 @@ This downloads a subtitle in portuguese or english (these languages are the defa
 
 
 Download subtitles for some specific language:
-$ perl --lang pt <movie>
+$ perl subdb.pl --lang pt <movie>
 
 or you can define some order in the languages you want:
 
-$ perl --lang pt --lang en --lang fr <movie>
+$ perl subdb.pl --lang pt --lang en --lang fr <movie>
 This will try to download the subtitles in portuguese. If there's no portuguese subtitles it will then try to download an english one. Finally if there is none in english it will then try to download a french one. If there is no subtitle in portuguese, english or french no subtitle is downloaded.
 
 
