@@ -48,6 +48,11 @@ GetOptions("lang=s"=>\@USER_LANGUAGES);
 
 for my $file (@ARGV){
 
+  if( ! -e $file ){
+    say "File not found= $file";
+    next;
+    }
+
   my @fileData = fileparse($file, ALLOWED_FILE_EXTENSIONS_REGEXP);
   
   say "File extension= ",$fileData[2];
