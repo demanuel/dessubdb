@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 ###############################################################################
 #     DESsubdb - download subtitles for your movies from the thesubdb database
 #     Copyright (C) 2012  David Santiago
@@ -16,8 +18,6 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-
-#!/usr/bin/perl
 use warnings;
 use strict;
 use utf8;
