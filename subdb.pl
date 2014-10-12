@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 ###############################################################################
 #     DESsubdb - download subtitles for your movies from the thesubdb database
 #     Copyright (C) 2012  David Santiago
@@ -16,8 +18,6 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-
-#!/usr/bin/perl
 use warnings;
 use strict;
 use utf8;
@@ -34,7 +34,7 @@ use constant ALLOWED_FILE_EXTENSIONS_REGEXP => "\.[^.]*";
 use constant BLOCK_SIZE=>65536;# 64K
 use constant SUBDB_API_URL=>'http://api.thesubdb.com/?';
 use constant USER_AGENT => 'SubDB/1.0 (DESsubdb/0.1; http://sourceforge.net/projects/dessubdb)';
-use constant SUBTITLES_LANGUAGE => qw(en pt);
+use constant SUBTITLES_LANGUAGE => $ENV{ 'SUBDB_LANGS' } ? ( split /\s+/, $ENV{ 'SUBDB_LANGS' } ) : qw(en pt);
 use constant ALLOWED_VIDEO_FILE_EXTENSIONS => qw(.avi .m4v .mkv .mp4 .ogv .flv);
 use constant ALLOWED_SUB_FILE_EXTENSIONS => qw(.srt .sub);
 
@@ -47,6 +47,11 @@ GetOptions("lang=s"=>\@USER_LANGUAGES);
 
 
 for my $file (@ARGV){
+
+  if( ! -e $file ){
+    say "File not found= $file, skipped!";
+    next;
+    }
 
   my @fileData = fileparse($file, ALLOWED_FILE_EXTENSIONS_REGEXP);
   
