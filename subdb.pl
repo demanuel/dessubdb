@@ -120,10 +120,12 @@ sub searchAndDownloadSubs{
   say "Querying the url: ".SUBDB_API_URL.create_query(%url_parameters);
   
   my $response = $browser->get(SUBDB_API_URL.create_query(%url_parameters));
-  say "Response = ".$response->status_line;
+  print "Response = ".$response->status_line;
+
 
   if ($response->is_success){
     my $availableLanguages = $response->content;
+    say " (Available languages: $availableLanguages)";
     my @languagesToDownload = ();
     
     for my $lang ($#USER_LANGUAGES==0?@USER_LANGUAGES:SUBTITLES_LANGUAGE){
@@ -148,7 +150,6 @@ sub searchAndDownloadSubs{
 
     }
   }
-
 
 }
 
