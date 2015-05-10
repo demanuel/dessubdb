@@ -3,6 +3,8 @@ This program is licensed as GPL v3.
 This program downloads subtitles for your videos from the http://www.thesubdb.com database.
 You can also upload subtitles to their database.
 
+This program can be integrated with the mpv player. For more instructions on how to achieve it check the mpv.lua file
+
 How to use this program.
 
 Download subtitles:
