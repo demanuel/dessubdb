@@ -17,7 +17,7 @@ DESSUBDB = "subdb.pl"
 
 function remote_subtitle()
 	 current_file =  mp.get_property("path");
-	 os.execute("perl "..DESSUBDB.." '"..current_file.."'"); --Add extra options in this line
+	 os.execute("perl "..DESSUBDB.." \""..current_file.."\""); --Add extra options in this line
 	 mp.commandv("rescan_external_files", "reselect")
 end;
 
