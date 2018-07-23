@@ -3,7 +3,7 @@
 ###############################################################################
 #     DESsubdb - download subtitles for your movies from the thesubdb database
 #     Copyright (C) 2012  David Santiago
-#  
+#
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
 #     the Free Software Foundation, either version 3 of the License, or
@@ -45,16 +45,15 @@ my @USER_LANGUAGES;
 GetOptions("lang=s"=>\@USER_LANGUAGES);
 
 
-
 for my $file (@ARGV){
 
   if( ! -e $file ){
     say "File not found= $file, skipped!";
     next;
-    }
+  }
 
   my @fileData = fileparse($file, ALLOWED_FILE_EXTENSIONS_REGEXP);
-  
+
   say "File extension= ",$fileData[2];
 
 
@@ -70,55 +69,67 @@ for my $file (@ARGV){
 
 #upload subtitles
 sub uploadSubs{
-  
+
   my $file = shift;
   my $fileSize = -s $file;
 
-
   my @fileData = fileparse($file, ALLOWED_FILE_EXTENSIONS_REGEXP);
-  
+
   for my $extension (ALLOWED_VIDEO_FILE_EXTENSIONS){
-    if( -e $fileData[1].$fileData[0].$extension){
-      
-      say "Found ".$fileData[1].$fileData[0].$extension;
+    my $videoFile = $fileData[1].$fileData[0].$extension;
+    if( -e $videoFile){
 
-      my $fileHash = getFileHash($fileData[1].$fileData[0].$extension);
-
-      my %url_parameters = ("action"=>"upload",);
-
-      my %url_data = (
-		      Content_Type => 'multipart/form-data',
-		      "content"=>[
-				  "hash"=> $fileHash,
-				  "file"=>[$file,$fileData[0], (Content_Type => "application/octet-stream")] ,
-				  ],
-		     );
-      
-      my $response = $browser->post(SUBDB_API_URL.create_query(%url_parameters), %url_data );
-      say "Subtitles Upload result= ".$response->status_line;
-      
+      say "Found $videoFile";
+      uploadSubtitle($file, @fileData[0..1],$extension);
 
       return;
 
+    } else {
+      my $lang = (split(/\./, $fileData[0]))[-1];
+      (my $fileName = $fileData[0]) =~ s/\.$lang$//;
+      if (-e $fileData[1].$fileName.$extension) {
+        say "Found subtitle language: $lang";
+        say "Found $videoFile";
+        uploadSubtitle($file, $fileName, $fileData[1], $extension);
+      }
     }
-      
+
   }
 
 }
 
+sub uploadSubtitle {
+  my ($subtitleFile, $fileName, $path, $extension) = @_;
+  my $file = "$path$fileName$extension";
+
+  my $fileHash = getFileHash($file);
+
+  my %url_parameters = ("action"=>"upload",);
+
+  my %url_data = (
+      Content_Type => 'multipart/form-data',
+      "content"=>[
+      "hash"=> $fileHash,
+      "file"=>[$subtitleFile, $fileName, (Content_Type => "application/octet-stream")] ,
+      ],
+    );
+  my $response = $browser->post(SUBDB_API_URL.create_query(%url_parameters), %url_data );
+  say "Subtitles Upload result= ".$response->status_line;
+}
+
 # search and download subtitles
 sub searchAndDownloadSubs{
-  
+
   my $file = shift;
-  
+
   my %url_parameters = (
 			"hash"=>getFileHash( $file),
 			"action"=>"search",
 		       );
-  
+
 
   say "Querying the url: ".SUBDB_API_URL.create_query(%url_parameters);
-  
+
   my $response = $browser->get(SUBDB_API_URL.create_query(%url_parameters));
   print "Response = ".$response->status_line;
 
@@ -127,9 +138,9 @@ sub searchAndDownloadSubs{
     my $availableLanguages = $response->content;
     say " (Available languages: $availableLanguages)";
     my @languagesToDownload = ();
-    
+
     for my $lang ($#USER_LANGUAGES==0?@USER_LANGUAGES:SUBTITLES_LANGUAGE){
-      
+
       if( $availableLanguages =~ /$lang/ ){
 	push @languagesToDownload, $lang;
       }
@@ -138,12 +149,12 @@ sub searchAndDownloadSubs{
     if(@languagesToDownload >= 1){
       $url_parameters{"action"} = "download";
       $url_parameters{"language"} = join ',', @languagesToDownload;
-      
+
       my @fileData = fileparse($file, ALLOWED_FILE_EXTENSIONS_REGEXP);
-      
+
 
       $response = $browser->get(SUBDB_API_URL.create_query(%url_parameters), ':content_file'=>$fileData[1].$fileData[0].".srt");
-      
+
       if($response->is_success){
 	say "Subtitles for $file downloaded!";
       }
@@ -154,30 +165,30 @@ sub searchAndDownloadSubs{
 }
 
 
-# calculates the file hash, as specified in the thesubdb site 
+# calculates the file hash, as specified in the thesubdb site
 sub getFileHash{
 
-  my $filename = shift or die 'A filename is required!'; 
+  my $filename = shift or die 'A filename is required!';
 
   my $filesize = -s $filename;
 
   die "The file is too small! Wrong file?!? " unless $filesize > BLOCK_SIZE*2;
 
   open (my $fh, "<", $filename) or die "Couldn't open file $filename: $!";
-  
+
   binmode $fh;
-  
+
   my $buffer;
   my $data;
-  
+
   read $fh, $data, BLOCK_SIZE;
 
   $buffer = $data;
-  
+
   seek $fh, -1*BLOCK_SIZE, 2;
-  
+
   read $fh, $data, BLOCK_SIZE;
-  
+
   $buffer .=$data;
 
   close $fh;
@@ -190,7 +201,6 @@ sub getFileHash{
 
 # i copied this from somewhere on the internet. I don't know the credits. If You do, please tell me so i can
 # put them here.
-# My perl kungfu is not good enough for this code (YET! :-P )
 sub create_query{
     my %hash = @_;
     my @pairs;
