@@ -82,14 +82,12 @@ sub uploadSubs{
       say "Found $videoFile";
       uploadSubtitle($file, @fileData[0..1],$extension);
 
-      return;
-
     } else {
       my $lang = (split(/\./, $fileData[0]))[-1];
       (my $fileName = $fileData[0]) =~ s/\.$lang$//;
       if (-e $fileData[1].$fileName.$extension) {
         say "Found subtitle language: $lang";
-        say "Found $videoFile";
+        say "Found $fileData[1]$fileName$extension";
         uploadSubtitle($file, $fileName, $fileData[1], $extension);
       }
     }
